@@ -3,6 +3,8 @@
 import os
 from pkg_resources import parse_version
 
+import pytest
+
 from doi import (
     validate_doi, find_doi_in_text, __version__, pdf_to_doi,
     get_real_url_from_doi
@@ -14,6 +16,7 @@ def test_valid_version() -> None:
     assert parse_version(__version__) >= parse_version("0.1.0")
 
 
+@pytest.mark.net
 def test_validate_doi() -> None:
     data = [
         ('10.1063/1.5081715',
@@ -38,6 +41,7 @@ def test_validate_doi() -> None:
             assert str(e) == 'HTTP 404: DOI not found'
 
 
+@pytest.mark.net
 def test_get_real_url_from_doi() -> None:
     data = [
         ('10.1016/S0009-2614(97)04014-1',
