@@ -12,16 +12,17 @@ from doi import (
 def test_validate_doi() -> None:
     data = [
         ("10.1063/1.5081715",
-            "http://aip.scitation.org/doi/10.1063/1.5081715"),
+         "https://pubs.aip.org/jcp/article/150/7/074102/197572/Exact-two-component-equation-of-motion-coupled"),  # noqa: E501
         ("10.1007%2FBF01451751",
-            "http://link.springer.com/10.1007/BF01451751"),
+         "http://link.springer.com/10.1007/BF01451751"),
         ("10.1103/PhysRevLett.49.57",
-            "https://link.aps.org/doi/10.1103/PhysRevLett.49.57"),
+         "https://link.aps.org/doi/10.1103/PhysRevLett.49.57"),
         ("10.1080/14786442408634457",
-            "https://www.tandfonline.com/doi/full/10.1080/14786442408634457"),
-        ("10.1021/jp003647e", "https://pubs.acs.org/doi/10.1021/jp003647e"),
+         "https://www.tandfonline.com/doi/full/10.1080/14786442408634457"),
+        ("10.1021/jp003647e",
+         "https://pubs.acs.org/doi/10.1021/jp003647e"),
         ("10.1016/S0009-2614(97)04014-1",
-            "https://linkinghub.elsevier.com/retrieve/pii/S0009261497040141"),
+         "https://linkinghub.elsevier.com/retrieve/pii/S0009261497040141"),
     ]
     for doi, url in data:
         assert url == validate_doi(doi)
@@ -57,21 +58,21 @@ def test_find_doi_in_line() -> None:
         ("/scitation.org/doi/10.1063/1.881498?234saf=34", "10.1063/1.881498"),
         ("/scitation.org/doi/10.1063/1.88149 8?234saf=34", "10.1063/1.88149"),
         ("/scitation.org/doi/10.1063/1.uniau12?as=234",
-            "10.1063/1.uniau12"),
+         "10.1063/1.uniau12"),
         ("https://doi.org/10.1093/analys/anw053", "10.1093/analys/anw053"),
         ("http://.scitation.org/doi/10.1063/1.mart(88)1498?asdfwer",
-            "10.1063/1.mart(88)1498"),
+         "10.1063/1.mart(88)1498"),
         ("@ibook{doi:10.1002/9780470125915.ch2,", "10.1002/9780470125915.ch2"),
         ('<rdf:Description rdf:about="" xmlns:dc="http://purl.org/dc/elements'
          '.1/"><dc:format>application/pdf</dc:format><dc:identifier>'
          "doi:10.1063/1.5079474</dc:identifier></rdf:Description>",
-            "10.1063/1.5079474"),
+         "10.1063/1.5079474"),
         ("<(DOI:10.1002/9780470915.CH2)/S/URI,", "10.1002/9780470915.CH2"),
         ("URL<(DOI:10.1002/9780470125915.CH2,", "10.1002/9780470125915.CH2"),
         (r"A<</S/URI/URI(https://doi.org/10.1016/j.comptc.2018.10.004)>>/"
          r"Border[0 0 0]/M(D:20181022082356+0530)/Rect[147.40158 594.36926"
          r"347.24957 605.36926]/Subtype/Link/Type/A",
-            "10.1016/j.comptc.2018.10.004"),
+         "10.1016/j.comptc.2018.10.004"),
         ("doi(10.1038/s41535-018-0103-6;)", "10.1038/s41535-018-0103-6"),
     ]
     for url, doi in test_data:
