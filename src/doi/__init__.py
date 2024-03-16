@@ -5,7 +5,7 @@ import logging
 from typing import Optional
 
 
-__version__ = '0.2.0'
+__version__ = "0.2.0"
 logger = logging.getLogger("doi")   # type: logging.Logger
 
 
@@ -24,9 +24,9 @@ def pdf_to_doi(filepath: str, maxlines: Optional[int] = None) -> Optional[str]:
     if maxlines is None:
         maxlines = sys.maxsize
 
-    with open(filepath, 'rb') as fd:
+    with open(filepath, "rb") as fd:
         for j, line in enumerate(fd):
-            doi = find_doi_in_text(line.decode('ascii', errors='ignore'))
+            doi = find_doi_in_text(line.decode("ascii", errors="ignore"))
             if doi:
                 return doi
             if j > maxlines:
@@ -48,16 +48,16 @@ def validate_doi(doi: str) -> Optional[str]:
     import urllib.parse
     import json
     url = "https://doi.org/api/handles/{doi}".format(doi=doi)
-    logger.debug('handle url %s', url)
+    logger.debug("handle url %s", url)
     request = urllib.request.Request(url)
 
     try:
         result = json.loads(urllib.request.urlopen(request).read().decode())
     except HTTPError:
-        raise ValueError('HTTP 404: DOI not found')
+        raise ValueError("HTTP 404: DOI not found")
     else:
-        urls = [v['data']['value']
-                for v in result['values'] if v.get('type') == 'URL']
+        urls = [v["data"]["value"]
+                for v in result["values"] if v.get("type") == "URL"]
         return urls[0] if urls else None
 
 
@@ -68,12 +68,12 @@ def get_clean_doi(doi: str) -> str:
     :param doi: String containing a DOI.
     :returns: The extracted DOI.
     """
-    doi = re.sub(r'%2F', '/', doi)
+    doi = re.sub(r"%2F", "/", doi)
     # For pdfs
-    doi = re.sub(r'\)>', ' ', doi)
-    doi = re.sub(r'\)/S/URI', ' ', doi)
-    doi = re.sub(r'(/abstract)', '', doi)
-    doi = re.sub(r'\)$', '', doi)
+    doi = re.sub(r"\)>", " ", doi)
+    doi = re.sub(r"\)/S/URI", " ", doi)
+    doi = re.sub(r"(/abstract)", "", doi)
+    doi = re.sub(r"\)$", "", doi)
     return doi
 
 
@@ -87,11 +87,11 @@ def find_doi_in_text(text: str) -> Optional[str]:
     forbidden_doi_characters = r'"\s%$^\'<>@,;:#?&'
     # Sometimes it is in the javascript defined
     var_doi = re.compile(
-        r'doi(.org)?'
-        r'\s*(=|:|/|\()\s*'
-        r'("|\')?'
-        r'(?P<doi>[^{fc}]+)'
-        r'("|\'|\))?'
+        r"doi(.org)?"
+        r"\s*(=|:|/|\()\s*"
+        r"(\"|')?"
+        r"(?P<doi>[^{fc}]+)"
+        r"(\"|'|\))?"
         .format(
             fc=forbidden_doi_characters
         ), re.I
@@ -102,7 +102,7 @@ def find_doi_in_text(text: str) -> Optional[str]:
         try:
             m = next(miter)
             if m:
-                doi = m.group('doi')
+                doi = m.group("doi")
                 return get_clean_doi(doi)
         except StopIteration:
             pass
@@ -119,8 +119,8 @@ def get_real_url_from_doi(doi: str) -> Optional[str]:
     if url is None:
         return url
 
-    m = re.match(r'.*linkinghub\.elsevier.*/pii/([A-Z0-9]+).*', url, re.I)
+    m = re.match(r".*linkinghub\.elsevier.*/pii/([A-Z0-9]+).*", url, re.I)
     if m:
-        return ('https://www.sciencedirect.com/science/article/abs/pii/{pii}'
+        return ("https://www.sciencedirect.com/science/article/abs/pii/{pii}"
                 .format(pii=m.group(1)))
     return url
