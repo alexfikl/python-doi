@@ -69,6 +69,7 @@ multiline-quotes = "double"
 addopts = [
     "--doctest-modules",
     "--cov=src/doi",
+    "--ignore=docs",
 ]
 markers = [
     "net: marks tests that call use the net"
